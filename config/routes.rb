@@ -27,3 +27,6 @@ PostitTemplate::Application.routes.draw do
   resources :categories, only: [:new, :create, :show]
   resources :users, only: [:show, :create, :edit, :update]
 end
+
+# POST /posts/3/vote => 'posts#vote'
+# POST /comments/3/vote => 'comments#vote'

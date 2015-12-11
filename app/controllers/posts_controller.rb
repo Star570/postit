@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :vote]
-  before_action :require_user, except: [:show, :index]
+  before_action :require_user, except: [:index, :show]
   # 1. set up instance variable for action
   # 2. redirect based on some condition
 
@@ -40,15 +40,18 @@ class PostsController < ApplicationController
   end
 
   def vote
-    vote = Vote.create(voteable: @post, creator: current_user, vote: params[:vote])
-
-    if vote.valid?
-      flash[:notice] = 'Your vote was counted.'
-    else
-      flash[:error] = 'You can only vote on a post once.'
+    @vote = Vote.create(voteable: @post, creator: current_user, vote: params[:vote])
+    respond_to do |format|
+      format.html do  
+        if @vote.valid?
+          flash[:notice] = 'Your vote was counted.'
+        else
+          flash[:error] = 'You can only vote on a post once.'
+        end
+        redirect_to posts_path
+      end
+      format.js
     end
-    
-    redirect_to :back
   end
 
   private
